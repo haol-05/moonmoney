@@ -1,6 +1,14 @@
 # Changelog
 
+## 0.1.1
+
+Documentation release so that the published package matches the repository
+exactly: the README carries the Mooncakes link and the quick start shows
+`moon add`, and SOURCES.md records how to replace the ISO compilation with the
+official SIX list. No API or behaviour change.
+
 ## 0.1.0
+
 
 First release.
 
