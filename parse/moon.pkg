@@ -1,0 +1,12 @@
+// Reading an amount out of text.
+//
+// This package is deliberately separate from the money core: a program that
+// only does arithmetic does not have to carry a parser, and a program that only
+// parses does not have to know how the amount is stored.
+import {
+  "haol-05/moonmoney",
+}
+
+import {
+  "haol-05/moonmoney/parse",
+} for "test"
