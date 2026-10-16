@@ -60,9 +60,16 @@ that is the layer where a cent goes missing.
   only mingw cannot build that one target. CI covers all four targets on Linux.
 - Node.js only if you want to regenerate the currency table.
 
+The package is published as
+[`haol-05/moonmoney`](https://mooncakes.io/docs/haol-05/moonmoney) on Mooncakes.
+
 ## Quick start
 
 ```sh
+# use it from another project
+moon add haol-05/moonmoney
+
+# work on this repository
 moon check --deny-warn --target all
 moon build --target all
 moon test --deny-warn --target all
@@ -163,11 +170,10 @@ asking for more pads with zeros and never invents precision.
   returns `None` rather than a guess.
 - **Nothing is validated against a payment network.** The ISO 4217 table is
   reference data, not a statement about what a bank will accept.
-- **The ISO data's underlying licence is unclear.** See
-  [SOURCES.md](SOURCES.md); that file records the one provenance point a reviewer
-  should confirm, and the generator is written so the source can be swapped
-  without changing the output format.
-- **Not yet published to Mooncakes.** The module is `haol-05/moonmoney`.
+- **One provenance point needs a reviewer's eye.** The ISO 4217 compilation
+  MoonMoney reads is under ODC-PDDL-1.0, but the SIX Group lists underneath it
+  state no licence. [SOURCES.md](SOURCES.md) records this and the one-constant
+  change that swaps in the official list instead.
 
 ## Reproducing the currency table
 
