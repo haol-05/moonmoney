@@ -149,11 +149,11 @@ async function main() {
 /// below reads as one line per currency.
 fn row(
   code : String,
-  numeric : Int,
-  exponent : Int,
-  display_digits : Int,
-  cash_exponent : Int,
-  cash_step : Int,
+  numeric : Int32,
+  exponent : Int32,
+  display_digits : Int32,
+  cash_exponent : Int32,
+  cash_step : Int32,
   name : String,
   symbol : String,
 ) -> Currency {

@@ -65,11 +65,11 @@ pub(all) struct MoneyStyle {
   group_separator : String
   decimal_separator : String
   /// How many decimal places to show; `None` follows the currency.
-  digits : Int?
+  digits : Int32?
   /// Digits in the rightmost group.
-  primary_group : Int
+  primary_group : Int32
   /// Digits in every group to its left, which is 2 for the Indian system.
-  secondary_group : Int
+  secondary_group : Int32
   negative : NegativeStyle
 } derive(Eq, Debug)
 
@@ -99,19 +99,19 @@ pub fn MoneyStyle::standard() -> MoneyStyle {
 ///|
 /// `($1,234.56)` for a negative amount.
 pub fn MoneyStyle::accounting() -> MoneyStyle {
-  { ..MoneyStyle::standard(), negative: Parentheses }
+  { ..MoneyStyle::standard(), negative: Parentheses, }
 }
 
 ///|
 /// `USD 1,234.56`, which stays unambiguous in a log or a CSV column.
 pub fn MoneyStyle::code_first() -> MoneyStyle {
-  { ..MoneyStyle::standard(), unit: Code, space: true }
+  { ..MoneyStyle::standard(), unit: Code, space: true, }
 }
 
 ///|
 /// `1234.56`, no grouping and no unit, for a machine-readable field.
 pub fn MoneyStyle::plain() -> MoneyStyle {
-  { ..MoneyStyle::standard(), unit: Bare, group: false }
+  { ..MoneyStyle::standard(), unit: Bare, group: false, }
 }
 
 ///|
@@ -120,13 +120,13 @@ pub fn MoneyStyle::with_separators(
   group_separator : String,
   decimal_separator : String,
 ) -> MoneyStyle {
-  { ..MoneyStyle::standard(), group_separator, decimal_separator }
+  { ..MoneyStyle::standard(), group_separator, decimal_separator, }
 }
 
 ///|
 /// The same style with a fixed number of decimal places.
-pub fn MoneyStyle::with_digits(self : MoneyStyle, digits : Int) -> MoneyStyle {
-  { ..self, digits: Some(digits) }
+pub fn MoneyStyle::with_digits(self : MoneyStyle, digits : Int32) -> MoneyStyle {
+  { ..self, digits: Some(digits), }
 }
 
 ///|
@@ -155,8 +155,8 @@ pub fn MoneyStyle::with_position(
 pub fn group_digits(
   digits : StringView,
   separator : String,
-  primary : Int,
-  secondary : Int,
+  primary : Int32,
+  secondary : Int32,
 ) -> String {
   let length = digits.length()
   let first = if primary < 1 { 3 } else { primary }

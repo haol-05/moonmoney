@@ -10,8 +10,8 @@
 ///|
 /// Orders indices by descending remainder, ties by ascending index, so that the
 /// result does not depend on how the input happened to be ordered.
-fn order_by_remainder(remainders : Array[@bigint.BigInt]) -> Array[Int] {
-  let order : Array[Int] = []
+fn order_by_remainder(remainders : Array[@bigint.BigInt]) -> Array[Int32] {
+  let order : Array[Int32] = []
   let count = remainders.length()
   for index in 0..<count {
     order.push(index)
@@ -94,7 +94,7 @@ pub fn Money::allocate_ratios(
   let result : Array[Money] = []
   for part in parts {
     let minor = if negative { 0L - part } else { part }
-    result.push({ minor, currency: self.currency })
+    result.push({ minor, currency: self.currency, })
   }
   result
 }
@@ -106,7 +106,7 @@ pub fn Money::allocate_ratios(
 /// 10.00 into 3 gives 3.34, 3.33, 3.33.
 pub fn Money::allocate(
   self : Money,
-  parts : Int,
+  parts : Int32,
 ) -> Array[Money] raise MoneyError {
   if parts <= 0 {
     raise EmptyAllocation("an allocation")

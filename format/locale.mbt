@@ -12,8 +12,8 @@ priv struct LocaleStyle {
   decimal_separator : String
   position : SymbolPosition
   space : Bool
-  primary_group : Int
-  secondary_group : Int
+  primary_group : Int32
+  secondary_group : Int32
   negative : NegativeStyle
 }
 

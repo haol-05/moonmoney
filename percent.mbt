@@ -29,12 +29,12 @@ pub fn Percent::of_bp(bp : Int64) -> Percent {
 ///|
 /// A whole number of percent, e.g. `of_whole(8L)` is 8%.
 pub fn Percent::of_whole(whole : Int64) -> Percent {
-  { bp: whole * 100L }
+  { bp: whole * 100L, }
 }
 
 ///|
 pub fn Percent::zero() -> Percent {
-  { bp: 0L }
+  { bp: 0L, }
 }
 
 ///|
@@ -157,9 +157,9 @@ fn parse_int64_or_fail(
 pub fn Percent::of_ratio(
   numerator : Int64,
   denominator : Int64,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Percent raise MoneyError {
-  { bp: mul_div_round(numerator, 10000L, denominator, mode) }
+  { bp: mul_div_round(numerator, 10000L, denominator, mode), }
 }
 
 ///|
@@ -170,7 +170,7 @@ pub fn Percent::of_ratio(
 pub fn Money::percent(
   self : Money,
   percent : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   {
     minor: mul_div_round(self.minor, percent.bp(), 10000L, mode),
@@ -183,7 +183,7 @@ pub fn Money::percent(
 pub fn Money::add_percent(
   self : Money,
   percent : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   let part = self.percent(percent, mode~)
   self.add(part)
@@ -194,7 +194,7 @@ pub fn Money::add_percent(
 pub fn Money::sub_percent(
   self : Money,
   percent : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   let part = self.percent(percent, mode~)
   self.sub(part)

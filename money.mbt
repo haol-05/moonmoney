@@ -35,7 +35,7 @@ pub extend Money with Eq::{not_equal, equal}
 ///|
 /// An amount from an exact number of minor units.
 pub fn Money::of_minor(minor : Int64, currency : Currency) -> Money {
-  { minor, currency }
+  { minor, currency, }
 }
 
 ///|
@@ -69,9 +69,9 @@ pub fn Money::of_parts(
   }
   let whole = mul_checked(units, scale, "units to minor units")
   if units < 0L {
-    { minor: sub_checked(whole, fraction, "parts to minor units"), currency }
+    { minor: sub_checked(whole, fraction, "parts to minor units"), currency, }
   } else {
-    { minor: add_checked(whole, fraction, "parts to minor units"), currency }
+    { minor: add_checked(whole, fraction, "parts to minor units"), currency, }
   }
 }
 
@@ -90,7 +90,7 @@ pub fn max_amount() -> Int64 {
 ///|
 /// Zero in a given currency.
 pub fn Money::zero(currency : Currency) -> Money {
-  { minor: 0L, currency }
+  { minor: 0L, currency, }
 }
 
 ///|
@@ -118,7 +118,7 @@ pub fn Money::fraction(self : Money) -> Int64 {
 
 ///|
 /// `-1`, `0` or `1`.
-pub fn Money::sign(self : Money) -> Int {
+pub fn Money::sign(self : Money) -> Int32 {
   if self.minor == 0L {
     0
   } else if self.minor < 0L {
@@ -162,7 +162,7 @@ fn Money::ensure_same_currency(
 
 ///|
 pub fn Money::neg(self : Money) -> Money raise MoneyError {
-  { minor: sub_checked(0L, self.minor, "negation"), currency: self.currency }
+  { minor: sub_checked(0L, self.minor, "negation"), currency: self.currency, }
 }
 
 ///|
@@ -196,7 +196,7 @@ pub fn Money::sub(self : Money, other : Money) -> Money raise MoneyError {
 
 ///|
 /// Multiplication by a whole number.
-pub fn Money::mul(self : Money, factor : Int) -> Money raise MoneyError {
+pub fn Money::mul(self : Money, factor : Int32) -> Money raise MoneyError {
   self.mul_int64(factor.to_int64())
 }
 
@@ -213,16 +213,16 @@ pub fn Money::mul_int64(self : Money, factor : Int64) -> Money raise MoneyError 
 pub fn Money::div_int64(
   self : Money,
   divisor : Int64,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
-  { minor: div_round(self.minor, divisor, mode), currency: self.currency }
+  { minor: div_round(self.minor, divisor, mode), currency: self.currency, }
 }
 
 ///|
 pub fn Money::div(
   self : Money,
-  divisor : Int,
-  mode? : RoundingMode = HalfUp,
+  divisor : Int32,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   self.div_int64(divisor.to_int64(), mode~)
 }
@@ -230,7 +230,7 @@ pub fn Money::div(
 ///|
 /// Total order over amounts of the same currency, used by sorting and by
 /// `min` and `max`.
-pub fn Money::compare(self : Money, other : Money) -> Int raise MoneyError {
+pub fn Money::compare(self : Money, other : Money) -> Int32 raise MoneyError {
   self.ensure_same_currency(other)
   if self.minor == other.minor {
     0
@@ -278,7 +278,7 @@ pub fn Money::sum(
 pub fn Money::round_to(
   self : Money,
   increment : Int64,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   if increment <= 0L {
     raise InvalidAmount(
@@ -303,7 +303,7 @@ pub fn Money::round_to(
 /// currency without a separate cash rule is returned unchanged.
 pub fn Money::round_cash(
   self : Money,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   self.round_to(self.currency.cash_increment(), mode~)
 }

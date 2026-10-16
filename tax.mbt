@@ -9,7 +9,7 @@
 pub fn Money::tax_on(
   self : Money,
   rate : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   self.percent(rate, mode~)
 }
@@ -19,7 +19,7 @@ pub fn Money::tax_on(
 pub fn Money::with_tax(
   self : Money,
   rate : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   self.add_percent(rate, mode~)
 }
@@ -46,7 +46,7 @@ pub extend TaxLine with @debug.Debug::{to_repr}
 pub fn Money::net_from_gross(
   gross : Money,
   rate : Percent,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> (Money, Money) raise MoneyError {
   let denominator = add_checked(10000L, rate.bp(), "tax rate")
   if denominator <= 0L {
@@ -56,7 +56,7 @@ pub fn Money::net_from_gross(
     )
   }
   let net_minor = mul_div_round(gross.minor, 10000L, denominator, mode)
-  let net = { minor: net_minor, currency: gross.currency }
+  let net = { minor: net_minor, currency: gross.currency, }
   (net, gross.sub(net))
 }
 
@@ -70,12 +70,12 @@ pub fn Money::net_from_gross(
 pub fn Money::tax_lines(
   self : Money,
   rates : Array[Percent],
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Array[TaxLine] raise MoneyError {
   let lines : Array[TaxLine] = []
   for rate in rates {
     let tax = self.tax_on(rate, mode~)
-    lines.push({ rate, net: self, tax, gross: self.add(tax) })
+    lines.push({ rate, net: self, tax, gross: self.add(tax), })
   }
   lines
 }

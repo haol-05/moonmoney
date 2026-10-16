@@ -80,7 +80,7 @@ fn cash(value : @moonmoney.Money) -> @moonmoney.Money {
 }
 
 ///|
-fn share(value : @moonmoney.Money, parts : Int) -> Array[@moonmoney.Money] {
+fn share(value : @moonmoney.Money, parts : Int32) -> Array[@moonmoney.Money] {
   value.allocate(parts) catch {
     error => abort(@moonmoney.MoneyError::message(error))
   }

@@ -10,7 +10,7 @@
 /// An exchange rate, exactly `scaled / 10^scale`.
 pub(all) struct Rate {
   scaled : Int64
-  scale : Int
+  scale : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -23,10 +23,10 @@ pub extend Rate with @debug.Debug::{to_repr}
 /// Builds a rate from an integer and a number of decimal places.
 ///
 /// `None` when the number of places is outside `0..=18`.
-pub fn Rate::of_scaled(scaled : Int64, scale : Int) -> Rate? {
+pub fn Rate::of_scaled(scaled : Int64, scale : Int32) -> Rate? {
   match pow10(scale) {
     None => None
-    Some(_) => Some({ scaled, scale })
+    Some(_) => Some({ scaled, scale, })
   }
 }
 
@@ -82,7 +82,7 @@ pub fn Rate::as_double(self : Rate) -> Double {
 /// The reciprocal, with twelve decimal places and one rounding step.
 pub fn Rate::inverse(
   self : Rate,
-  mode? : RoundingMode = HalfEven,
+  mode~ : RoundingMode = HalfEven,
 ) -> Rate raise MoneyError {
   if self.scaled == 0L {
     raise DivisionByZero
@@ -104,7 +104,7 @@ pub fn Rate::inverse(
     @bigint.BigInt::from_int64(self.scaled),
     mode,
   )
-  { scaled, scale: target_places }
+  { scaled, scale: target_places, }
 }
 
 ///|
@@ -118,7 +118,7 @@ pub fn Money::convert(
   self : Money,
   target : Currency,
   rate : Rate,
-  mode? : RoundingMode = HalfUp,
+  mode~ : RoundingMode = HalfUp,
 ) -> Money raise MoneyError {
   let source_power = self.currency.scale()
   let target_power = target.scale()
@@ -133,5 +133,5 @@ pub fn Money::convert(
   let denominator = @bigint.BigInt::from_int64(rate_power).mul(
     @bigint.BigInt::from_int64(source_power),
   )
-  { minor: big_div_round(numerator, denominator, mode), currency: target }
+  { minor: big_div_round(numerator, denominator, mode), currency: target, }
 }

@@ -21,7 +21,7 @@ fn is_separator_code(cu : UInt16) -> Bool {
 }
 
 ///|
-fn digit_value(cu : UInt16) -> Int {
+fn digit_value(cu : UInt16) -> Int32 {
   cu.to_int() - 48
 }
 
@@ -67,7 +67,7 @@ fn tail_is_zero(rest : StringView) -> Bool {
 /// whether everything after it is zero, which is what separates a bare half from
 /// a value above it.
 fn should_round_away(
-  first : Int,
+  first : Int32,
   rest_is_zero : Bool,
   negative : Bool,
   keep_is_odd : Bool,
@@ -94,7 +94,7 @@ fn should_round_away(
 fn assemble(
   whole : StringView,
   fraction : StringView,
-  exponent : Int,
+  exponent : Int32,
   negative : Bool,
   mode : @moonmoney.RoundingMode?,
   original : StringView,
@@ -329,7 +329,7 @@ fn resolve_currency(
 /// five, while `1.2345` can only be a fraction, and a fraction longer than the
 /// currency holds has to be refused or rounded rather than quietly read as a
 /// larger whole number.
-fn decimal_index(numeric : StringView, exponent : Int) -> Int {
+fn decimal_index(numeric : StringView, exponent : Int32) -> Int32 {
   let units = numeric.code_units()
   let length = units.length()
   let mut last = -1
@@ -379,7 +379,7 @@ pub fn amount_in(
 pub fn amount_in_rounded(
   text : StringView,
   currency : @moonmoney.Currency,
-  mode? : @moonmoney.RoundingMode = @moonmoney.HalfEven,
+  mode~ : @moonmoney.RoundingMode = @moonmoney.HalfEven,
 ) -> @moonmoney.Money raise @moonmoney.MoneyError {
   parse_amount(text, Some(currency), Some(mode))
 }
@@ -467,5 +467,5 @@ fn parse_amount(
     mode,
     raw,
   )
-  { minor, currency }
+  { minor, currency, }
 }

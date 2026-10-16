@@ -9,17 +9,17 @@ pub(all) struct Currency {
   /// ISO 4217 alphabetic code, upper case, e.g. `USD`.
   code : String
   /// ISO 4217 numeric code, or 0 for a currency built with `custom`.
-  numeric : Int
+  numeric : Int32
   /// ISO 4217 minor units: the number of decimal places an amount is stored with.
-  exponent : Int
+  exponent : Int32
   /// The number of decimal places CLDR recommends for display, which is at most
   /// `exponent` and is smaller for currencies whose smallest unit has fallen out
   /// of use.
-  display_digits : Int
+  display_digits : Int32
   /// The decimal places a cash payment is settled in.
-  cash_exponent : Int
+  cash_exponent : Int32
   /// The cash rounding step, in units of `10^-cash_exponent`.
-  cash_step : Int
+  cash_step : Int32
   /// English name.
   name : String
   /// CLDR symbol, empty when the currency has none.
@@ -35,7 +35,7 @@ pub extend Currency with @debug.Debug::{to_repr}
 ///|
 /// Ten to the power of `exponent`, or `None` when the result would not fit an
 /// `Int64`. This bounds every exponent in the library at 18.
-pub fn pow10(exponent : Int) -> Int64? {
+pub fn pow10(exponent : Int32) -> Int64? {
   if exponent < 0 || exponent > 18 {
     return None
   }
@@ -105,8 +105,8 @@ pub fn Currency::label(self : Currency) -> String {
 /// scale exactly. The code is upper-cased so lookups and comparisons stay stable.
 pub fn Currency::custom(
   code : String,
-  exponent : Int,
-  symbol? : String = "",
+  exponent : Int32,
+  symbol~ : String = "",
 ) -> Currency? {
   match pow10(exponent) {
     None => None
@@ -160,7 +160,7 @@ pub fn Currency::known_codes() -> Array[String] {
 
 ///|
 /// How many currencies the registry holds.
-pub fn Currency::count() -> Int {
+pub fn Currency::count() -> Int32 {
   table.length()
 }
 
