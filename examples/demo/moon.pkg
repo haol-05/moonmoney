@@ -1,0 +1,12 @@
+// A self-contained tour of the library.
+//
+// It embeds every input, so it runs on any target with no file access, and it
+// prints the amounts it computes so that the behaviour can be read rather than
+// only asserted.
+import {
+  "haol-05/moonmoney",
+  "haol-05/moonmoney/format",
+  "haol-05/moonmoney/parse",
+}
+
+pkgtype(kind: "executable")
