@@ -1,0 +1,13 @@
+// The command line.
+//
+// It reads its input from the arguments alone, so it needs no filesystem access
+// and runs on every target the library supports.
+import {
+  "haol-05/moonmoney",
+  "haol-05/moonmoney/format",
+  "haol-05/moonmoney/parse",
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+}
+
+pkgtype(kind: "executable")
