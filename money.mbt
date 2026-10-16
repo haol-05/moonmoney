@@ -14,6 +14,9 @@ pub(all) struct Money {
 } derive(Debug)
 
 ///|
+pub extend Money with @debug.Debug::{to_repr}
+
+///|
 /// Amounts are equal when they are the same number of minor units of the same
 /// currency. The rest of the currency record -- name, symbol, cash rules -- is
 /// display data and does not take part in the comparison.
@@ -25,6 +28,9 @@ pub impl Eq for Money with fn equal(self, other) {
 pub impl Eq for Money with fn not_equal(self, other) {
   !self.equal(other)
 }
+
+///|
+pub extend Money with Eq::{not_equal, equal}
 
 ///|
 /// An amount from an exact number of minor units.

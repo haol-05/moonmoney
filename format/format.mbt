@@ -17,11 +17,23 @@ pub(all) enum NegativeStyle {
 } derive(Eq, Debug)
 
 ///|
+pub extend NegativeStyle with Eq::{not_equal, equal}
+
+///|
+pub extend NegativeStyle with @debug.Debug::{to_repr}
+
+///|
 /// Where the symbol or code goes.
 pub(all) enum SymbolPosition {
   Before
   After
 } derive(Eq, Debug)
+
+///|
+pub extend SymbolPosition with Eq::{not_equal, equal}
+
+///|
+pub extend SymbolPosition with @debug.Debug::{to_repr}
 
 ///|
 /// What identifies the currency in the output. Named \`UnitLabel\` rather than
@@ -34,6 +46,12 @@ pub(all) enum UnitLabel {
   /// Nothing; the number stands alone.
   Bare
 } derive(Eq, Debug)
+
+///|
+pub extend UnitLabel with Eq::{not_equal, equal}
+
+///|
+pub extend UnitLabel with @debug.Debug::{to_repr}
 
 ///|
 /// How to lay an amount out.
@@ -54,6 +72,12 @@ pub(all) struct MoneyStyle {
   secondary_group : Int
   negative : NegativeStyle
 } derive(Eq, Debug)
+
+///|
+pub extend MoneyStyle with Eq::{not_equal, equal}
+
+///|
+pub extend MoneyStyle with @debug.Debug::{to_repr}
 
 ///|
 /// `$1,234.56`, the common English layout.

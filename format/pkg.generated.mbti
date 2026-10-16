@@ -32,9 +32,12 @@ pub(all) struct MoneyStyle {
 } derive(Eq, @debug.Debug)
 pub fn MoneyStyle::accounting() -> Self
 pub fn MoneyStyle::code_first() -> Self
+pub fn MoneyStyle::equal(Self, Self) -> Bool
 pub fn MoneyStyle::for_locale(StringView) -> Self?
+pub fn MoneyStyle::not_equal(Self, Self) -> Bool
 pub fn MoneyStyle::plain() -> Self
 pub fn MoneyStyle::standard() -> Self
+pub fn MoneyStyle::to_repr(Self) -> @debug.Repr
 pub fn MoneyStyle::with_digits(Self, Int) -> Self
 pub fn MoneyStyle::with_negative(Self, NegativeStyle) -> Self
 pub fn MoneyStyle::with_position(Self, SymbolPosition) -> Self
@@ -45,17 +48,26 @@ pub(all) enum NegativeStyle {
   Parentheses
   TrailingMinus
 } derive(Eq, @debug.Debug)
+pub fn NegativeStyle::equal(Self, Self) -> Bool
+pub fn NegativeStyle::not_equal(Self, Self) -> Bool
+pub fn NegativeStyle::to_repr(Self) -> @debug.Repr
 
 pub(all) enum SymbolPosition {
   Before
   After
 } derive(Eq, @debug.Debug)
+pub fn SymbolPosition::equal(Self, Self) -> Bool
+pub fn SymbolPosition::not_equal(Self, Self) -> Bool
+pub fn SymbolPosition::to_repr(Self) -> @debug.Repr
 
 pub(all) enum UnitLabel {
   Symbol
   Code
   Bare
 } derive(Eq, @debug.Debug)
+pub fn UnitLabel::equal(Self, Self) -> Bool
+pub fn UnitLabel::not_equal(Self, Self) -> Bool
+pub fn UnitLabel::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

@@ -35,6 +35,9 @@ pub(all) struct TaxLine {
 } derive(Debug)
 
 ///|
+pub extend TaxLine with @debug.Debug::{to_repr}
+
+///|
 /// Recovers the net and the tax from a tax-inclusive amount.
 ///
 /// The tax is the difference between the gross and the recovered net, so the

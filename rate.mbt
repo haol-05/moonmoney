@@ -14,6 +14,12 @@ pub(all) struct Rate {
 } derive(Eq, Debug)
 
 ///|
+pub extend Rate with Eq::{not_equal, equal}
+
+///|
+pub extend Rate with @debug.Debug::{to_repr}
+
+///|
 /// Builds a rate from an integer and a number of decimal places.
 ///
 /// `None` when the number of places is outside `0..=18`.

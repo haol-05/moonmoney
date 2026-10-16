@@ -23,6 +23,12 @@ pub(all) enum RoundingMode {
 } derive(Eq, Debug)
 
 ///|
+pub extend RoundingMode with Eq::{not_equal, equal}
+
+///|
+pub extend RoundingMode with @debug.Debug::{to_repr}
+
+///|
 pub fn RoundingMode::label(self : RoundingMode) -> String {
   match self {
     HalfUp => "half-up"

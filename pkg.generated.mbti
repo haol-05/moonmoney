@@ -34,6 +34,7 @@ pub(all) suberror MoneyError {
   EmptyRatio
 } derive(@debug.Debug)
 pub fn MoneyError::message(Self) -> String
+pub fn MoneyError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
 pub(all) struct Currency {
@@ -77,6 +78,7 @@ pub fn Money::convert(Self, Currency, Rate, mode? : RoundingMode) -> Self raise 
 pub fn Money::debug_string(Self) -> String
 pub fn Money::div(Self, Int, mode? : RoundingMode) -> Self raise MoneyError
 pub fn Money::div_int64(Self, Int64, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::equal(Self, Self) -> Bool
 pub fn Money::fraction(Self) -> Int64
 pub fn Money::is_negative(Self) -> Bool
 pub fn Money::is_positive(Self) -> Bool
@@ -87,6 +89,7 @@ pub fn Money::mul(Self, Int) -> Self raise MoneyError
 pub fn Money::mul_int64(Self, Int64) -> Self raise MoneyError
 pub fn Money::neg(Self) -> Self raise MoneyError
 pub fn Money::net_from_gross(Self, Percent, mode? : RoundingMode) -> (Self, Self) raise MoneyError
+pub fn Money::not_equal(Self, Self) -> Bool
 pub fn Money::of_minor(Int64, Currency) -> Self
 pub fn Money::of_parts(Int64, Int64, Currency) -> Self raise MoneyError
 pub fn Money::of_units(Int64, Currency) -> Self raise MoneyError
@@ -102,6 +105,7 @@ pub fn Money::sum(Array[Self], Currency) -> Self raise MoneyError
 pub fn Money::tax_lines(Self, Array[Percent], mode? : RoundingMode) -> Array[TaxLine] raise MoneyError
 pub fn Money::tax_on(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
 pub fn Money::to_double(Self) -> Double
+pub fn Money::to_repr(Self) -> @debug.Repr
 pub fn Money::units(Self) -> Int64
 pub fn Money::with_tax(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
 pub fn Money::zero(Currency) -> Self
@@ -112,12 +116,15 @@ pub(all) struct Percent {
 } derive(Eq, @debug.Debug)
 pub fn Percent::as_double(Self) -> Double
 pub fn Percent::bp(Self) -> Int64
+pub fn Percent::equal(Self, Self) -> Bool
 pub fn Percent::is_zero(Self) -> Bool
+pub fn Percent::not_equal(Self, Self) -> Bool
 pub fn Percent::of_bp(Int64) -> Self
 pub fn Percent::of_ratio(Int64, Int64, mode? : RoundingMode) -> Self raise MoneyError
 pub fn Percent::of_whole(Int64) -> Self
 pub fn Percent::parse(StringView) -> Self raise MoneyError
 pub fn Percent::text(Self) -> String
+pub fn Percent::to_repr(Self) -> @debug.Repr
 pub fn Percent::zero() -> Self
 
 pub(all) struct Rate {
@@ -125,9 +132,12 @@ pub(all) struct Rate {
   scale : Int
 } derive(Eq, @debug.Debug)
 pub fn Rate::as_double(Self) -> Double
+pub fn Rate::equal(Self, Self) -> Bool
 pub fn Rate::inverse(Self, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Rate::not_equal(Self, Self) -> Bool
 pub fn Rate::of_scaled(Int64, Int) -> Self?
 pub fn Rate::parse(StringView) -> Self raise MoneyError
+pub fn Rate::to_repr(Self) -> @debug.Repr
 
 pub(all) enum RoundingMode {
   HalfUp
@@ -138,7 +148,10 @@ pub(all) enum RoundingMode {
   Ceiling
   Floor
 } derive(Eq, @debug.Debug)
+pub fn RoundingMode::equal(Self, Self) -> Bool
 pub fn RoundingMode::label(Self) -> String
+pub fn RoundingMode::not_equal(Self, Self) -> Bool
+pub fn RoundingMode::to_repr(Self) -> @debug.Repr
 
 pub(all) struct TaxLine {
   rate : Percent
@@ -146,6 +159,7 @@ pub(all) struct TaxLine {
   tax : Money
   gross : Money
 } derive(@debug.Debug)
+pub fn TaxLine::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

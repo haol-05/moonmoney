@@ -13,6 +13,12 @@ pub(all) struct Percent {
 } derive(Eq, Debug)
 
 ///|
+pub extend Percent with Eq::{not_equal, equal}
+
+///|
+pub extend Percent with @debug.Debug::{to_repr}
+
+///|
 let big_hundred : @bigint.BigInt = @bigint.BigInt::from_int(100)
 
 ///|

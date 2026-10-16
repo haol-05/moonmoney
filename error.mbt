@@ -25,6 +25,9 @@ pub(all) suberror MoneyError {
 } derive(@debug.Debug)
 
 ///|
+pub extend MoneyError with @debug.Debug::{to_repr}
+
+///|
 /// A printable explanation, used by the command line and by tests.
 pub fn MoneyError::message(self : MoneyError) -> String {
   match self {
