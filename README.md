@@ -48,20 +48,16 @@ that is the layer where a cent goes missing.
 
 ## Requirements
 
-- The [MoonBit toolchain](https://www.moonbitlang.com/download/). Nothing outside
-  `moonbitlang/core` is needed to build, test or run the library.
-- **`moonc` 0.10.14 or newer for contest submission.** The OSC acceptance rules
-  require it, and the toolchain installed while this project was written is
-  `moonc v0.10.7`, which is below that line and has to be upgraded before the
-  project is submitted.
-- **Two toolchain releases both read this source.** It was written and formatted
-  with `moon 0.1.20260807` / `moonc v0.10.7`, and continuous integration builds
-  it with the newest release at the time, `moon 0.1.20261012` /
-  `moonc v0.10.15`, where `moon check`, `moon build`, `moon test`, the demo and
-  the command line all pass. The two disagree only in how they *print* the index
-  type: 0.10.7 writes `Int` and 0.10.15 rewrites it to `Int32` while still
-  accepting `Int`. The source keeps `Int`, so it builds on both, and the
-  workflow reports that formatting difference instead of failing on it.
+- The [MoonBit toolchain](https://www.moonbitlang.com/download/), **`moonc`
+  0.10.14 or newer** — the floor the OSC acceptance rules set. This repository is
+  developed, formatted and verified with `moon 0.1.20261012` / `moonc v0.10.15`,
+  which is the release continuous integration installs as well, so `moon fmt`
+  and `moon info` reproduce the committed files byte for byte.
+- Nothing outside `moonbitlang/core` is needed to build, test or run the library,
+  on `wasm`, `wasm-gc` and `js`.
+- A C toolchain for `--target native`: the toolchain's Windows native backend
+  wants MSVC Build Tools (`cl.exe` or `clang-cl.exe`), so a Windows machine with
+  only mingw cannot build that one target. CI covers all four targets on Linux.
 - Node.js only if you want to regenerate the currency table.
 
 ## Quick start
@@ -180,8 +176,9 @@ node tools/generate_currency_table.mjs
 ```
 
 The script reads the two data sets over jsDelivr, reconciles them and rewrites
-`currency_table.mbt`. It is deterministic: running it twice produces a
-byte-identical file. The provenance of every field is recorded in
+`currency_table.mbt` in the canonical `moon fmt` form, so the generated file is
+byte-identical to what the formatter would produce and `moon fmt` is a no-op on
+it. Running the script twice produces a byte-identical file. The provenance of every field is recorded in
 [SOURCES.md](SOURCES.md) and repeated in the header of the generated file.
 
 ## Layout
