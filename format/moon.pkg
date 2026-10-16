@@ -1,0 +1,14 @@
+// Turning an amount into text.
+//
+// Formatting is separated from arithmetic because the two have different
+// failure modes and different audiences: the core has to be exact, while
+// presentation has to follow a locale. Keeping the locale table out of the core
+// means a server that never prints an amount never carries it.
+import {
+  "haol-05/moonmoney",
+  "moonbitlang/core/debug",
+}
+
+import {
+  "haol-05/moonmoney/format",
+} for "test"
