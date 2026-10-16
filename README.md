@@ -48,10 +48,20 @@ that is the layer where a cent goes missing.
 
 ## Requirements
 
-- The [MoonBit toolchain](https://www.moonbitlang.com/download/). The interfaces
-  in this repository were generated with `moon 0.1.20260807` and
-  `moonc v0.10.7`. Nothing outside `moonbitlang/core` is needed to build, test
-  or run the library.
+- The [MoonBit toolchain](https://www.moonbitlang.com/download/). Nothing outside
+  `moonbitlang/core` is needed to build, test or run the library.
+- **`moonc` 0.10.14 or newer for contest submission.** The OSC acceptance rules
+  require it, and the toolchain installed while this project was written is
+  `moonc v0.10.7`, which is below that line and has to be upgraded before the
+  project is submitted.
+- **Two toolchain releases both read this source.** It was written and formatted
+  with `moon 0.1.20260807` / `moonc v0.10.7`, and continuous integration builds
+  it with the newest release at the time, `moon 0.1.20261012` /
+  `moonc v0.10.15`, where `moon check`, `moon build`, `moon test`, the demo and
+  the command line all pass. The two disagree only in how they *print* the index
+  type: 0.10.7 writes `Int` and 0.10.15 rewrites it to `Int32` while still
+  accepting `Int`. The source keeps `Int`, so it builds on both, and the
+  workflow reports that formatting difference instead of failing on it.
 - Node.js only if you want to regenerate the currency table.
 
 ## Quick start
