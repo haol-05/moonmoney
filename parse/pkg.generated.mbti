@@ -1,0 +1,21 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "haol-05/moonmoney/parse"
+
+import {
+  "haol-05/moonmoney",
+}
+
+// Values
+pub fn amount(StringView) -> @moonmoney.Money raise @moonmoney.MoneyError
+
+pub fn amount_in(StringView, @moonmoney.Currency) -> @moonmoney.Money raise @moonmoney.MoneyError
+
+pub fn amount_in_rounded(StringView, @moonmoney.Currency, mode? : @moonmoney.RoundingMode) -> @moonmoney.Money raise @moonmoney.MoneyError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

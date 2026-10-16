@@ -1,0 +1,62 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "haol-05/moonmoney/format"
+
+import {
+  "haol-05/moonmoney",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn format(@moonmoney.Money, style? : MoneyStyle) -> String raise @moonmoney.MoneyError
+
+pub fn format_lines(Array[@moonmoney.Money], style? : MoneyStyle) -> String raise @moonmoney.MoneyError
+
+pub fn group_digits(StringView, String, Int, Int) -> String
+
+pub fn known_locales() -> Array[String]
+
+// Errors
+
+// Types and methods
+pub(all) struct MoneyStyle {
+  unit : UnitLabel
+  position : SymbolPosition
+  space : Bool
+  group : Bool
+  group_separator : String
+  decimal_separator : String
+  digits : Int?
+  primary_group : Int
+  secondary_group : Int
+  negative : NegativeStyle
+} derive(Eq, @debug.Debug)
+pub fn MoneyStyle::accounting() -> Self
+pub fn MoneyStyle::code_first() -> Self
+pub fn MoneyStyle::for_locale(StringView) -> Self?
+pub fn MoneyStyle::plain() -> Self
+pub fn MoneyStyle::standard() -> Self
+pub fn MoneyStyle::with_digits(Self, Int) -> Self
+pub fn MoneyStyle::with_negative(Self, NegativeStyle) -> Self
+pub fn MoneyStyle::with_position(Self, SymbolPosition) -> Self
+pub fn MoneyStyle::with_separators(String, String) -> Self
+
+pub(all) enum NegativeStyle {
+  Minus
+  Parentheses
+  TrailingMinus
+} derive(Eq, @debug.Debug)
+
+pub(all) enum SymbolPosition {
+  Before
+  After
+} derive(Eq, @debug.Debug)
+
+pub(all) enum UnitLabel {
+  Symbol
+  Code
+  Bare
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

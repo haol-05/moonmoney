@@ -1,0 +1,152 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "haol-05/moonmoney"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn add_checked(Int64, Int64, String) -> Int64 raise MoneyError
+
+pub fn div_round(Int64, Int64, RoundingMode) -> Int64 raise MoneyError
+
+pub fn max_amount() -> Int64
+
+pub fn min_amount() -> Int64
+
+pub fn mul_checked(Int64, Int64, String) -> Int64 raise MoneyError
+
+pub fn mul_div_round(Int64, Int64, Int64, RoundingMode) -> Int64 raise MoneyError
+
+pub fn pow10(Int) -> Int64?
+
+pub fn sub_checked(Int64, Int64, String) -> Int64 raise MoneyError
+
+// Errors
+pub(all) suberror MoneyError {
+  DivisionByZero
+  Overflow(String)
+  CurrencyMismatch(String, String)
+  UnknownCurrency(String)
+  AmbiguousCurrency(String, String)
+  InvalidAmount(String, String)
+  EmptyAllocation(String)
+  EmptyRatio
+} derive(@debug.Debug)
+pub fn MoneyError::message(Self) -> String
+
+// Types and methods
+pub(all) struct Currency {
+  code : String
+  numeric : Int
+  exponent : Int
+  display_digits : Int
+  cash_exponent : Int
+  cash_step : Int
+  name : String
+  symbol : String
+} derive(Eq, @debug.Debug)
+pub fn Currency::all() -> Array[Self]
+pub fn Currency::by_token(StringView) -> Array[Self]
+pub fn Currency::cash_increment(Self) -> Int64
+pub fn Currency::count() -> Int
+pub fn Currency::custom(String, Int, symbol? : String) -> Self?
+pub fn Currency::display_symbol(Self) -> String
+pub fn Currency::equal(Self, Self) -> Bool
+pub fn Currency::find(StringView) -> Self?
+pub fn Currency::has_cash_rounding(Self) -> Bool
+pub fn Currency::known_codes() -> Array[String]
+pub fn Currency::label(Self) -> String
+pub fn Currency::not_equal(Self, Self) -> Bool
+pub fn Currency::same_as(Self, Self) -> Bool
+pub fn Currency::scale(Self) -> Int64
+pub fn Currency::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Money {
+  minor : Int64
+  currency : Currency
+} derive(@debug.Debug)
+pub fn Money::abs(Self) -> Self raise MoneyError
+pub fn Money::add(Self, Self) -> Self raise MoneyError
+pub fn Money::add_percent(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::allocate(Self, Int) -> Array[Self] raise MoneyError
+pub fn Money::allocate_percents(Self, Array[Percent]) -> Array[Self] raise MoneyError
+pub fn Money::allocate_ratios(Self, Array[Int64]) -> Array[Self] raise MoneyError
+pub fn Money::compare(Self, Self) -> Int raise MoneyError
+pub fn Money::convert(Self, Currency, Rate, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::debug_string(Self) -> String
+pub fn Money::div(Self, Int, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::div_int64(Self, Int64, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::fraction(Self) -> Int64
+pub fn Money::is_negative(Self) -> Bool
+pub fn Money::is_positive(Self) -> Bool
+pub fn Money::is_zero(Self) -> Bool
+pub fn Money::max(Self, Self) -> Self raise MoneyError
+pub fn Money::min(Self, Self) -> Self raise MoneyError
+pub fn Money::mul(Self, Int) -> Self raise MoneyError
+pub fn Money::mul_int64(Self, Int64) -> Self raise MoneyError
+pub fn Money::neg(Self) -> Self raise MoneyError
+pub fn Money::net_from_gross(Self, Percent, mode? : RoundingMode) -> (Self, Self) raise MoneyError
+pub fn Money::of_minor(Int64, Currency) -> Self
+pub fn Money::of_parts(Int64, Int64, Currency) -> Self raise MoneyError
+pub fn Money::of_units(Int64, Currency) -> Self raise MoneyError
+pub fn Money::percent(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::round_cash(Self, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::round_to(Self, Int64, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::same_currency(Self, Self) -> Bool
+pub fn Money::scale(Self) -> Int64
+pub fn Money::sign(Self) -> Int
+pub fn Money::sub(Self, Self) -> Self raise MoneyError
+pub fn Money::sub_percent(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::sum(Array[Self], Currency) -> Self raise MoneyError
+pub fn Money::tax_lines(Self, Array[Percent], mode? : RoundingMode) -> Array[TaxLine] raise MoneyError
+pub fn Money::tax_on(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::to_double(Self) -> Double
+pub fn Money::units(Self) -> Int64
+pub fn Money::with_tax(Self, Percent, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Money::zero(Currency) -> Self
+pub impl Eq for Money
+
+pub(all) struct Percent {
+  bp : Int64
+} derive(Eq, @debug.Debug)
+pub fn Percent::as_double(Self) -> Double
+pub fn Percent::bp(Self) -> Int64
+pub fn Percent::is_zero(Self) -> Bool
+pub fn Percent::of_bp(Int64) -> Self
+pub fn Percent::of_ratio(Int64, Int64, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Percent::of_whole(Int64) -> Self
+pub fn Percent::parse(StringView) -> Self raise MoneyError
+pub fn Percent::text(Self) -> String
+pub fn Percent::zero() -> Self
+
+pub(all) struct Rate {
+  scaled : Int64
+  scale : Int
+} derive(Eq, @debug.Debug)
+pub fn Rate::as_double(Self) -> Double
+pub fn Rate::inverse(Self, mode? : RoundingMode) -> Self raise MoneyError
+pub fn Rate::of_scaled(Int64, Int) -> Self?
+pub fn Rate::parse(StringView) -> Self raise MoneyError
+
+pub(all) enum RoundingMode {
+  HalfUp
+  HalfDown
+  HalfEven
+  Up
+  Down
+  Ceiling
+  Floor
+} derive(Eq, @debug.Debug)
+pub fn RoundingMode::label(Self) -> String
+
+pub(all) struct TaxLine {
+  rate : Percent
+  net : Money
+  tax : Money
+  gross : Money
+} derive(@debug.Debug)
+
+// Type aliases
+
+// Traits
