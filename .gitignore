@@ -1,0 +1,14 @@
+# Build output.
+_build/
+target/
+target
+.mooncakes/
+.moonagent/
+
+# Editor and OS noise.
+.DS_Store
+
+# Contest submission document: kept locally, never published to GitHub or
+# mooncakes.io. The public repository must not contain the proposal, the
+# registration form or any personal contact details.
+/申报书.md
