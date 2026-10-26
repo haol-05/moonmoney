@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.2
+
+- **Fixed:** rounding with a negative divisor moved toward zero instead of away
+  from it. `div_round(561438828, -2047, HalfEven)` returned `-274272` where the
+  nearest integer is `-274274`; the step is now derived from the sign of the
+  quotient, which is the sign of the numerator times the sign of the denominator.
+  The four directed modes were affected the same way and are fixed with it.
+- **Fixed:** `Money::debug_string` printed the literal text `{self.minor}`
+  instead of the amount, because one interpolation escape was missing.
+- **Added:** a property-test suite over `moonbitlang/core/quickcheck` (allocation
+  totals, the rounding neighbourhood, tax reversibility, arithmetic laws,
+  identity conversion), a branch-coverage suite for every refusal, and a
+  regression test for the negative-divisor rounding.
+- **Added:** `moon package` to the continuous integration run, so the zip the
+  registry would receive is built on every push.
+- **Changed:** three unreachable match arms were removed rather than left as
+  untested defensive code; the invariants that made them impossible are recorded
+  in comments. The suite is now 89 tests.
+
 ## 0.1.1
 
 Documentation release so that the published package matches the repository
