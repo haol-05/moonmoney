@@ -29,6 +29,9 @@ jobs:
         run: moon test --deny-warn --target all
       - name: Run the demo
         run: moon run examples/demo
+      - name: Package
+        # Builds the zip the registry would receive, without publishing it.
+        run: moon package
       - name: Run the command line
         run: moon run cmd/main -- tax 10000 USD 19%
       - name: Check formatting and interface
