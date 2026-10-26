@@ -321,5 +321,5 @@ pub fn Money::to_double(self : Money) -> Double {
 /// `-12.34 USD`, a debugging form. Use the format package for anything a user
 /// is meant to read.
 pub fn Money::debug_string(self : Money) -> String {
-  "{self.minor} \{self.currency.code}"
+  "\{self.minor} \{self.currency.code}"
 }
