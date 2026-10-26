@@ -129,11 +129,9 @@ fn assemble(
   let kept = if exponent == 0 { 0L } else { digits_to_int64(kept_text) }
   let base = @moonmoney.add_checked(scaled_whole, kept, "amount")
   let rest_units = rest_text.code_units()
-  let first = if rest_units.length() == 0 {
-    0
-  } else {
-    digit_value(rest_units[0])
-  }
+  // The branch above returned when the fraction fitted, so at least one digit
+  // was dropped and the first of them is always present.
+  let first = digit_value(rest_units[0])
   let rounding = match mode {
     Some(chosen) => chosen
     None =>
@@ -307,14 +305,9 @@ fn resolve_currency(
       for entry in found {
         codes.push(entry.code)
       }
-      raise @moonmoney.AmbiguousCurrency(
-        if prefix.is_empty() {
-          suffix.to_owned()
-        } else {
-          prefix.to_owned()
-        },
-        codes.join(", "),
-      )
+      // Two matches need two tokens, so the prefix is the one that named a
+      // currency: a single token can match at most one row of the table.
+      raise @moonmoney.AmbiguousCurrency(prefix.to_owned(), codes.join(", "))
     }
   }
 }

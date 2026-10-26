@@ -60,17 +60,13 @@ pub fn Rate::parse(text : StringView) -> Rate raise MoneyError {
   } else {
     parse_int64_or_fail(fraction_text, raw)
   }
-  let power = match pow10(places) {
-    Some(value) => value
-    None => raise InvalidAmount(raw.to_owned(), "too many decimal places")
-  }
+  // The check above bounds the places at nine, so ten to that power always fits.
+  let power = pow10(places).unwrap()
   let scaled_whole = mul_checked(whole, power, "rate")
   let magnitude = add_checked(scaled_whole, fraction, "rate")
   let signed = if negative { 0L - magnitude } else { magnitude }
-  match Rate::of_scaled(signed, places) {
-    Some(rate) => rate
-    None => raise InvalidAmount(raw.to_owned(), "too many decimal places")
-  }
+  // Again bounded: a scale of at most nine always yields a rate.
+  Rate::of_scaled(signed, places).unwrap()
 }
 
 ///|
@@ -88,10 +84,7 @@ pub fn Rate::inverse(
     raise DivisionByZero
   }
   let target_places = 12
-  let target_power = match pow10(target_places) {
-    Some(value) => value
-    None => raise Overflow("rate inversion")
-  }
+  let target_power = pow10(target_places).unwrap()
   let source_power = match pow10(self.scale) {
     Some(value) => value
     None => raise Overflow("rate inversion")
