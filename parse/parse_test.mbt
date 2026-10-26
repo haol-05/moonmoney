@@ -179,3 +179,114 @@ test "the three and four place currencies keep their places" {
   assert_eq(parsed_in("1234", "JPY").minor, 1234L)
   assert_eq(parsed_in("1,234", "JPY").minor, 1234L)
 }
+
+///|
+test "the refusal paths are reachable" {
+  // No currency anywhere in the text, and none declared.
+  let mut none = false
+  let _ = @parse.amount("12.34") catch {
+    @moonmoney.MoneyError::UnknownCurrency(_) => {
+      none = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(none, true)
+  // Two currencies named at once.
+  let mut ambiguous = false
+  let _ = @parse.amount("USD 12.34 EUR") catch {
+    @moonmoney.MoneyError::AmbiguousCurrency(_, codes) => {
+      ambiguous = codes.contains("USD") && codes.contains("EUR")
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(ambiguous, true)
+  // Blank input.
+  let mut blank = false
+  let _ = @parse.amount("   ") catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      blank = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(blank, true)
+  // Grouping that is not in threes in the middle of the number.
+  let mut bad_group = false
+  let _ = @parse.amount("USD 1,2345,678") catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      bad_group = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(bad_group, true)
+  // Two different grouping marks in one number.
+  let mut mixed = false
+  let _ = @parse.amount("USD 1,234.567") catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      mixed = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(mixed, true)
+}
+
+///|
+test "every rounding mode is accepted when excess precision is rounded" {
+  // 1.2250 is a bare half, so half-down keeps 122 and half-up takes 123.
+  assert_eq(parsed_rounded("1.2250", "USD", @moonmoney.HalfDown).minor, 122L)
+  assert_eq(parsed_rounded("1.2250", "USD", @moonmoney.HalfUp).minor, 123L)
+  assert_eq(parsed_rounded("1.2310", "USD", @moonmoney.Up).minor, 124L)
+  assert_eq(parsed_rounded("1.2310", "USD", @moonmoney.Down).minor, 123L)
+  assert_eq(parsed_rounded("1.2310", "USD", @moonmoney.Ceiling).minor, 124L)
+  // A negative amount rounds away from zero in the negative direction.
+  assert_eq(parsed_rounded("-1.2345", "USD", @moonmoney.HalfEven).minor, -123L)
+  assert_eq(parsed_rounded("-1.2355", "USD", @moonmoney.HalfEven).minor, -124L)
+  // Floor keeps the lower neighbour whatever the sign, so a positive amount
+  // truncates and a negative one moves further from zero.
+  assert_eq(parsed_rounded("1.2355", "USD", @moonmoney.Floor).minor, 123L)
+  assert_eq(parsed_rounded("-1.2310", "USD", @moonmoney.Floor).minor, -124L)
+  // A trailing decimal mark declares no fraction.
+  assert_eq(parsed_in("5.", "USD").minor, 500L)
+}
+
+///|
+test "a leading grouping mark leaves an empty first group" {
+  let mut raised = false
+  let _ = @parse.amount_in(",123", usd()) catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      raised = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(raised, true)
+}
+
+///|
+test "a hand-built currency with an impossible exponent is refused" {
+  // Currency is a public record, so a caller can build one the constructors
+  // would have rejected; the parser has to notice instead of wrapping.
+  let broken : @moonmoney.Currency = {
+    code: "BAD",
+    numeric: 0,
+    exponent: 19,
+    display_digits: 19,
+    cash_exponent: 19,
+    cash_step: 1,
+    name: "Broken",
+    symbol: "",
+  }
+  let mut raised = false
+  let _ = @parse.amount_in("1", broken) catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      raised = true
+      @moonmoney.Money::zero(usd())
+    }
+    _ => @moonmoney.Money::zero(usd())
+  }
+  assert_eq(raised, true)
+}

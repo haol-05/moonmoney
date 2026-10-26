@@ -149,3 +149,70 @@ test "amounts render one per line" {
   }
   assert_eq(text, "1.00\n-2.50")
 }
+
+///|
+test "every style knob is reachable" {
+  let money = @moonmoney.Money::of_minor(123456L, usd())
+  assert_eq(
+    render(money, @format.MoneyStyle::with_separators(" ", ",")),
+    "$1 234,56",
+  )
+  assert_eq(
+    render(money, @format.MoneyStyle::standard().with_position(@format.After)),
+    "1,234.56$",
+  )
+  assert_eq(
+    render(
+      money,
+      @format.MoneyStyle::standard()
+      .with_position(@format.Before)
+      .with_digits(2),
+    ),
+    "$1,234.56",
+  )
+  assert_eq(@format.known_locales().length(), 20)
+  assert_true(@format.known_locales().contains("de-DE"))
+}
+
+///|
+test "an impossible number of places is refused, not guessed" {
+  let money = @moonmoney.Money::of_minor(1234L, usd())
+  let mut negative = false
+  let _ = @format.format(
+    money,
+    style=@format.MoneyStyle::standard().with_digits(-1),
+  ) catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      negative = true
+      ""
+    }
+    _ => ""
+  }
+  assert_eq(negative, true)
+  let mut too_many = false
+  let _ = @format.format(
+    money,
+    style=@format.MoneyStyle::standard().with_digits(19),
+  ) catch {
+    @moonmoney.MoneyError::InvalidAmount(_, _) => {
+      too_many = true
+      ""
+    }
+    _ => ""
+  }
+  assert_eq(too_many, true)
+}
+
+///|
+test "formatting the smallest representable amount is reported" {
+  let smallest = @moonmoney.Money::of_minor(@moonmoney.min_amount(), usd())
+  let mut raised = false
+  let _ = @format.format(smallest) catch {
+    @moonmoney.MoneyError::Overflow(_) => {
+      raised = true
+      ""
+    }
+    _ => ""
+  }
+  assert_eq(raised, true)
+}
