@@ -81,6 +81,45 @@ moon run cmd/main -- parse "USD 1,234.56"
 amount written five ways. Its output is the fastest way to see what the library
 does and what it refuses.
 
+## Verifying it
+
+```sh
+moon check --deny-warn --target all      # no warnings on wasm, wasm-gc, js, native
+moon build --target all                  # four targets
+moon test --deny-warn --target all       # 89 tests on each target
+moon coverage analyze                    # branch coverage, see below
+moon package                             # the exact zip Mooncakes would receive
+```
+
+The suite is 89 tests in three layers:
+
+- **Behaviour tests** state what the library computes for specific inputs: the
+  seven rounding modes, the allocation invariants for the shapes that broke naive
+  implementations, tax in both directions, both separator conventions, and the
+  locale layouts.
+- **Property tests** (`money_property_test.mbt`, on `moonbitlang/core/quickcheck`)
+  state what holds for *every* input: a weighted or equal allocation adds back
+  up, an equal split spreads the remainder over at most one unit, half-even
+  always lands on a nearest integer, the four directed modes bracket the exact
+  quotient, tax and its reverse always rebuild the gross, addition is commutative
+  and invertible, and a unit rate leaves the amount unchanged.
+- **Error-path tests** (`error_paths_test.mbt`) exercise every refusal: mismatched
+  currencies, overflow in both directions, a rounding step of zero, an impossible
+  exponent on a hand-built currency, a rate that cannot be inverted. An error path
+  that has never run is an error path nobody has read.
+
+`moon coverage analyze` reports two uncovered lines in the library, both guards
+that no caller can reach: a non-digit in a run that only ever receives digits,
+and a locale tag shipped without a region. Everything else in `parse`, `format`
+and the core is executed by the suite. The command line and the demo are programs
+rather than a library, so continuous integration covers them by running them.
+
+The property suite paid for itself immediately: it found that
+`div_round(561438828, -2047, HalfEven)` returned `-274272` where the nearest
+integer is `-274274`, because the rounding step was derived from the remainder's
+sign rather than the quotient's. That is fixed, with the case pinned as a
+regression test.
+
 ## What it does
 
 | Area | Details |

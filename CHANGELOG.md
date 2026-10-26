@@ -2,9 +2,15 @@
 
 ## 0.1.3
 
-Documentation correction: the verification section quoted the library's
-uncovered-line count before the last branch test landed. It is two, not three,
-and the entry now says which two. No code change.
+Version bump only: the documentation correction this release announced did not
+land, because the README edit was never written to disk. See 0.1.4.
+
+## 0.1.4
+
+Documentation: the README gains the verification section that 0.1.3 announced —
+the commands, the three layers of the suite, the two uncovered library guards and
+the rounding bug the property tests found. This time the file was read back from
+disk to confirm the text is there. No code change.
 
 ## 0.1.2
 
