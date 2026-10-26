@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+Documentation correction: the verification section quoted the library's
+uncovered-line count before the last branch test landed. It is two, not three,
+and the entry now says which two. No code change.
+
 ## 0.1.2
 
 - **Fixed:** rounding with a negative divisor moved toward zero instead of away
