@@ -372,6 +372,28 @@ test "half-down drops a bare half towards zero" {
 }
 
 ///|
+test "a negative divisor rounds away from zero, not toward it" {
+  // The exact quotient is -274273.97..., so the nearest integer is -274274.
+  // Deriving the step from the remainder's sign used to move it the other way.
+  assert_eq(
+    @moonmoney.div_round(561438828L, -2047L, @moonmoney.HalfEven),
+    -274274L,
+  )
+  assert_eq(
+    @moonmoney.div_round(561438828L, 2047L, @moonmoney.HalfEven),
+    274274L,
+  )
+  assert_eq(@moonmoney.div_round(7L, -2L, @moonmoney.HalfUp), -4L)
+  assert_eq(@moonmoney.div_round(-7L, -2L, @moonmoney.HalfUp), 4L)
+  assert_eq(@moonmoney.div_round(7L, -2L, @moonmoney.Floor), -4L)
+  assert_eq(@moonmoney.div_round(7L, -2L, @moonmoney.Ceiling), -3L)
+  assert_eq(@moonmoney.div_round(-7L, -2L, @moonmoney.Floor), 3L)
+  assert_eq(@moonmoney.div_round(-7L, -2L, @moonmoney.Ceiling), 4L)
+  assert_eq(@moonmoney.div_round(5L, -2L, @moonmoney.HalfEven), -2L)
+  assert_eq(@moonmoney.div_round(-5L, -2L, @moonmoney.HalfEven), 2L)
+}
+
+///|
 test "division by zero is reported" {
   let mut raised = false
   let _ = @moonmoney.div_round(1L, 0L, @moonmoney.HalfUp) catch {

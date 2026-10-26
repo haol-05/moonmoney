@@ -80,6 +80,8 @@ fn big_div_round(
     return big_to_int64(quotient, "division")
   }
   let negative_remainder = remainder.compare_int(0) < 0
+  let remainder_positive = remainder.compare_int(0) > 0
+  let denominator_positive = denominator.compare_int(0) > 0
   let abs_remainder = if negative_remainder {
     remainder.neg()
   } else {
@@ -91,6 +93,12 @@ fn big_div_round(
   } else {
     denominator
   }
+  // "Away from zero" is a step in the direction of the exact quotient, which is
+  // the sign of the numerator times the sign of the denominator. The sign of the
+  // remainder is not that direction: with a negative denominator it is the
+  // opposite one, and stepping by it would round towards zero.
+  let quotient_negative = (numerator.compare_int(0) < 0) !=
+    (denominator.compare_int(0) < 0)
   let twice_remainder = abs_remainder.mul(big_two)
   let comparison = twice_remainder.compare(abs_denominator)
   let quotient_even = quotient.mod(big_two).is_zero()
@@ -100,14 +108,14 @@ fn big_div_round(
     HalfEven => comparison > 0 || (comparison == 0 && !quotient_even)
     Up => true
     Down => false
-    Ceiling => !negative_remainder
-    Floor => negative_remainder
+    Ceiling => remainder_positive == denominator_positive
+    Floor => remainder_positive != denominator_positive
   }
   if !away_from_zero {
     return big_to_int64(quotient, "division")
   }
-  let bump = if negative_remainder { big_one.neg() } else { big_one }
-  big_to_int64(quotient.add(bump), "division")
+  let step = if quotient_negative { big_one.neg() } else { big_one }
+  big_to_int64(quotient.add(step), "division")
 }
 
 ///|
